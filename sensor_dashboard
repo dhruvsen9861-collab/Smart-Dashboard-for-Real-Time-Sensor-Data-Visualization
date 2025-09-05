@@ -1,0 +1,126 @@
+import requests
+import datetime
+import random
+import time
+import smtplib
+from email.mime.text import MIMEText
+import csv
+import os
+
+# 🔗 Power BI Push URL (replace with your actual one)
+POWER_BI_URL = "https://api.powerbi.com/beta/d9d17d7a-f0f9-480c-8cb8-e162329aaa91/datasets/75d2300d-adcc-4ad6-a18c-20c63582a7e5/rows?experience=power-bi&key=wGyyLi9RmwrEgIramKCsvlccc3jg9kDH8euc%2BOYWp2wM7oYu25c1SJ6IjzMPobxgHlHbvzbpvGHJ%2FhoPzM734A%3D%3D"
+
+# 📧 Email Config
+EMAIL_SENDER = "dhruvsen9861@gmail.com"        # ✅ Sender Gmail
+EMAIL_PASSWORD = "pelg epsk yddx hjhd"         # ✅ App Password (16-digit, with spaces)
+EMAIL_RECEIVER = "dhruv.bca2023@spsu.ac.in"    # ✅ Receiver (college mail)
+
+# 📂 CSV file to store data
+CSV_FILE = "sensor_data_log.csv"
+
+# 🌡️ Function to simulate sensor data
+def generate_sensor_data():
+    return {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "temperature": round(random.uniform(22, 35), 2),
+        "humidity": round(random.uniform(40, 90), 2),
+        "light_level": round(random.uniform(0, 100), 1),
+        "motion": "Detected" if random.random() > 0.5 else "None",
+        "air_quality_index": random.randint(50, 150),
+        "noise_level": round(random.uniform(30, 80), 1),
+        "location": "Lab Room",
+        "min_light": 0,
+        "max_light": 100
+    }
+
+# 📝 Save data into CSV
+def log_to_csv(data):
+    print("Saving data to:", os.path.abspath(CSV_FILE))  # Debug print
+    with open(CSV_FILE, mode="a", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=data.keys())
+        if file.tell() == 0:  # if file is empty
+            writer.writeheader()
+        writer.writerow(data)
+        
+ # ✅ Save into CSV
+    log_to_csv(data)
+
+# ✉️ Send email alerts
+def send_email_alert(alerts):
+    subject = "🔔 Sensor Alert!"
+    message = "⚠️ Alerts triggered:\n\n" + "\n".join(alerts)
+    msg = MIMEText(message)
+    msg["Subject"] = subject
+    msg["From"] = EMAIL_SENDER
+    msg["To"] = EMAIL_RECEIVER
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+        print("📧 Email alert sent!")
+    except Exception as e:
+        print("❌ Failed to send email:", e)
+
+# 🔁 Loop to send data every 10 seconds
+while True:
+    data = generate_sensor_data()
+
+    # ✅ Push to Power BI
+    response = requests.post(POWER_BI_URL, json=[data])
+    if response.status_code == 200:
+        print("✅ Sent to Power BI:", data)
+    else:
+        print("❌ Error:", response.status_code, response.text)
+
+    # ✅ Check thresholds for alerts
+    alerts = []
+    if data["motion"] == "Detected":
+        alerts.append("🚨 Motion Detected!")
+    if data["temperature"] > 30:
+        alerts.append(f"🔥 High Temperature: {data['temperature']}°C")
+    if data["noise_level"] > 75:
+        alerts.append(f"🔊 High Noise Level: {data['noise_level']} dB")
+    if data["light_level"] < 20:
+        alerts.append(f"💡 Very Low Light Level: {data['light_level']} Lux")
+
+    if alerts:
+        send_email_alert(alerts)
+
+    time.sleep(10)
+
+# 📧 Email Config
+EMAIL_SENDER = "dhruvsen9861@gmail.com"        # ✅ Sender Gmail
+EMAIL_PASSWORD = "pelg epsk yddx hjhd"         # ✅ App Password (16-digit, with spaces)
+EMAIL_RECEIVER = "dhruv.bca2023@spsu.ac.in"    # ✅ Receiver (college mail)
+
+# ✉️ Send email alerts
+def send_email_alert(alerts):
+    subject = "🔔 Sensor Alert!"
+    message = "⚠️ Alerts triggered:\n\n" + "\n".join(alerts)
+    msg = MIMEText(message)
+    msg["Subject"] = subject
+    msg["From"] = EMAIL_SENDER
+    msg["To"] = EMAIL_RECEIVER
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+        print("📧 Email alert sent!")
+    except Exception as e:
+        print("❌ Failed to send email:", e)
+
+ # ✅ Check thresholds for alerts
+    alerts = []
+    if data["motion"] == "Detected":
+        alerts.append("🚨 Motion Detected!")
+    if data["temperature"] > 30:
+        alerts.append(f"🔥 High Temperature: {data['temperature']}°C")
+    if data["noise_level"] > 75:
+        alerts.append(f"🔊 High Noise Level: {data['noise_level']} dB")
+    if data["light_level"] < 20:
+        alerts.append(f"💡 Very Low Light Level: {data['light_level']} Lux")
+
+    if alerts:
+        send_email_alert(alerts)
