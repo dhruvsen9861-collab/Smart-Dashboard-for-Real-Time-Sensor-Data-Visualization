@@ -20,4 +20,4 @@
 *EMAIL ALERTS EXAMPLE PLACEHOLDER*: <img width="1626" height="706" alt="Image" src="https://github.com/user-attachments/assets/b23d4396-db96-4f75-ad90-bc7c09312e40" />
 
 
-*OUTPUT*: 
+*OUTPUT*: <img width="1820" height="743" alt="Image" src="https://github.com/user-attachments/assets/2ba37a81-481e-403f-9b35-ef5fc83e8c73" />
