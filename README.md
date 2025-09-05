@@ -15,4 +15,4 @@
 
 *CSV FILE EXAMPLE THAT STORES HISTORICAL DATA*: <img width="1436" height="680" alt="Image" src="https://github.com/user-attachments/assets/f8fcc1bb-b729-4d96-9890-594ae9d9af7f" />
 
-*EMAIL ALERTS EXAMPLE PLACEHOLDER*: 
+*EMAIL ALERTS EXAMPLE PLACEHOLDER*: <img width="1626" height="706" alt="Image" src="https://github.com/user-attachments/assets/b23d4396-db96-4f75-ad90-bc7c09312e40" />
